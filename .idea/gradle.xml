@@ -12,6 +12,7 @@
             <option value="$PROJECT_DIR$/buildSrc" />
             <option value="$PROJECT_DIR$/data" />
             <option value="$PROJECT_DIR$/domain" />
+            <option value="$PROJECT_DIR$/presentation_common" />
             <option value="$PROJECT_DIR$/presentation_map" />
             <option value="$PROJECT_DIR$/presentation_path_selector" />
           </set>
