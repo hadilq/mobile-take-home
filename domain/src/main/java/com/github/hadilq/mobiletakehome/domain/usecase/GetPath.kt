@@ -7,6 +7,11 @@ import io.reactivex.Flowable
 interface GetPath {
 
     /**
+     * Returns a stream of possible airports with [iataOrName].
+     */
+    fun checkAirport(iataOrName: String): Flowable<Airport>
+
+    /**
      * Returns a list of Routes that connects the origin to the destination with the least transfer(ie. it will take
      * the same amount of time to travel between two airports, regardless of the physical distance between them).
      */

@@ -39,9 +39,9 @@ class AppDatabaseTest {
 
     @Test
     fun loadings() {
-        val airlines= database.airlineDao().all()
-        val airports= database.airportDao().all()
-        val routes = database.routeDao().all()
+        val airlines = database.airlineDao().all().test().values()
+        val airports = database.airportDao().all().test().values()
+        val routes = database.routeDao().all().test().values()
 
         assertTrue(airlines.isEmpty())
         assertTrue(airports.isEmpty())

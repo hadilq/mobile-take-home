@@ -6,15 +6,16 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.github.hadilq.mobiletakehome.data.db.table.RouteRow
 import com.github.hadilq.mobiletakehome.data.db.table.RouteWithAirlineAndAirports
+import io.reactivex.Flowable
 
 @Dao
 interface RouteDao {
 
     @Query("SELECT * FROM route")
-    fun all(): List<RouteRow>
+    fun all(): Flowable<RouteRow>
 
     @Query("SELECT al.name AS airline_name, al.twoDigitCode AS airline_twoDigitCode, al.threeDigitCode AS airline_threeDigitCode, al.country AS airline_country, ap1.name AS origin_name, ap1.city AS origin_city, ap1.country AS origin_country, ap1.iata AS origin_iata, ap1.latitude AS origin_latitude, ap1.longitude AS origin_longitude, ap2.name AS destination_name, ap2.city AS destination_city,ap2.country AS destination_country, ap2.iata AS destination_iata, ap2. latitude AS destination_latitude, ap2.longitude AS destination_longitude FROM route AS r INNER JOIN airline AS al ON r.airlineId = al.twoDigitCode INNER JOIN airport AS ap2 ON r.destinationId = ap2.iata INNER JOIN airport AS ap1 ON r.originId = ap1.iata WHERE r.originId = :originId")
-    fun findAllRoutesFromOrigin(originId: Long): List<RouteWithAirlineAndAirports>
+    fun findAllRoutesFromOrigin(originId: String): Flowable<RouteWithAirlineAndAirports>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun save(vararg route: RouteRow)
