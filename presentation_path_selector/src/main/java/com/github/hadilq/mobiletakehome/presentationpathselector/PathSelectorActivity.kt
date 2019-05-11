@@ -3,15 +3,25 @@ package com.github.hadilq.mobiletakehome.presentationpathselector
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import androidx.lifecycle.ViewModelProvider
 import com.github.hadilq.mobiletakehome.domain.entity.Route
 import com.github.hadilq.mobiletakehome.presentationcommon.BaseActivity
 import com.github.hadilq.mobiletakehome.presentationcommon.IntentFactory
+import javax.inject.Inject
 
 class PathSelectorActivity : BaseActivity() {
+
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    private lateinit var viewModel: PathSelectorViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.path_selector_activity)
+
+        viewModel = viewModel(viewModelFactory) {
+        }
     }
 
     fun sendResult(routes: List<Route>) {

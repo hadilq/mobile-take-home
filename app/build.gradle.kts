@@ -40,6 +40,7 @@ dependencies {
 
     implementation(project(":domain"))
     implementation(project(":data"))
+    implementation(project(":presentation_common"))
     implementation(project(":presentation_map"))
     implementation(project(":presentation_path_selector"))
 
