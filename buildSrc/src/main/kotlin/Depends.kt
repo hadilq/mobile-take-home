@@ -17,6 +17,7 @@ object Depends {
     const val roomRuntime = "androidx.room:room-runtime:${Versions.room}"
     const val roomCompiler = "androidx.room:room-compiler:${Versions.room}"
     const val roomRxJava = "androidx.room:room-rxjava2:${Versions.room}"
+    const val osmdroid = "org.osmdroid:osmdroid-android:6.1.0"
 
     const val kotlinTest = "org.jetbrains.kotlin:kotlin-test-junit:${Versions.kotlin}"
     const val robolectric = "org.robolectric:robolectric:${Versions.robolectric}"
