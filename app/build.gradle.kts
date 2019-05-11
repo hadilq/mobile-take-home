@@ -8,7 +8,7 @@ plugins {
 android {
     compileSdkVersion(Versions.compileSdk)
     defaultConfig {
-        applicationId = "com.github.hadilq.movieschallenge"
+        applicationId = "com.github.hadilq.mobiletakehome"
         minSdkVersion(Versions.minSdk)
         targetSdkVersion(Versions.targetSdk)
         versionCode = Versions.versionCode
