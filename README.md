@@ -1,28 +1,26 @@
-# Guestlogix Take Home Test - Mobile
+Mobile Take Home
+===
 
-At Guestlogix we feel that putting developers on the spot with advanced algorithmic puzzles doesn’t exactly highlight one’s true skillset. The intention of this assessment is to see how you approach and tackle a problem in the real world, not quivering in front of a whiteboard.
+This project is an assignment by Guestlogix, which you can find them as I forked their repository. 
+The original README.md file is available as ASSIGNMENT_README.md.
 
-### What is the test?
+Modules
+---
+This project implements the Clean Architecture. As you can read from [https://blog.cleancoder.com](http://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)
+the Clean Architecture has an onion shape structure like this
 
-You will be building a mobile application to draw a route on a map between two (or more) airports. Included in this repository is a set of Airport, Airline, and Route data. Your task is to provide the user with a form to enter the origin and destination airports and display a route that connects them (if any). If a route between the origin and destination includes more than one stopover, the line drawn on the map must go through all airports in order.
+![clean-architecture](https://blog.cleancoder.com/uncle-bob/images/2012-08-13-the-clean-architecture/CleanArchitecture.jpg)
 
-### User Stories
+In this project we manage it like this
 
-- As a user I can enter IATA codes of an origin and a destination airport and view a path between the two on a map. Airports in the data set with a null IATA code are provided for the sake of completeness, and may be omitted.
-- As a user I can enter IATA codes of an origin and destination airport that are not connected by a direct route. In this case, the route drawn on the map must show the shortest possible travel path between the two airports, going through all airports visited along the way in order. For the sake of simplicity, the shortest path is defined as the one with the least transfer (ie. it will take the same amount of time to travel between two airports, regardless of the physical distance between them). Keep in mind that an indirect route can go through more than one transfer airport before it reaches its final destination.
-- As a user I am provided meaningful feedback should no route exist between the airports.
-- As a user I am provided meaningful feedback if information entered is incorrect.
+- `domain` module: includes the `Entity` and `Use Cases`.
+- `data` module: includes the `Gateways`, `DB`, `External Interfaces` and `Device`.
+- `presentation_map` module: includes the `MVVM` architectural pattern, which is the `UI` and `Presenters` in the diagram above. 
+This module is keeping codes and resources of main activity, which we call it map activity here. 
+- `presentation_path_selector` module: the same as `presentation_map` module, but holding codes and resources of an 
+Android activity to handle path selection. This Activity could be a fragment in the map activity, but to keep navigation 
+easier and persist pages stack while relaunching the app from recent button of the device, I decided to use an activity here.
+- `app` module: integrates all classes and assemble the apk file. Mainly the modules and providers of Dagger framework live here.
 
-### Requirements
-
-The application may be done in Xamarin or in any native language that runs on the Android or iOS platforms. Otherwise, you have complete freedom in terms of how you implement the solution, as long as all user requirements are met.
-
-### Submitting
-
-1. Fork this repository and provide your solution.
-2. Run through it one last time to make sure it works!
-3. Send an email to indicate that you have completed the challenge. 
-
-### Questions
-
-If you have any questions during the challenge feel free to email Peter Samsonov at psamsonov@guestlogix.com. Whether it be a question about the requirements, submitting, anything, just send the email!
+By applying the DIP, dependency inversion principle, `data`, `presentation_path_selector` and `presentation_map` modules 
+depends on the `domain` module as the heart of the app. Also, the `app` module have to depend on every other modules.

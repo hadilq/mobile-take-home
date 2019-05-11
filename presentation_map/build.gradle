@@ -1,0 +1,47 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+
+android {
+    compileSdkVersion Versions.compileSdk
+
+    defaultConfig {
+        minSdkVersion Versions.minSdk
+        targetSdkVersion Versions.targetSdk
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    implementation project(':domain')
+
+    kapt Depends.lifecycleCompiler
+
+    implementation Depends.appcompat
+    implementation Depends.coreKtx
+    implementation Depends.lifecycle
+    implementation Depends.constraintLayout
+    implementation Depends.design
+    implementation Depends.rxJava
+    implementation Depends.dagger
+    implementation Depends.daggerAndroid
+    implementation Depends.annotations
+
+    androidTestImplementation Depends.testRunner
+    androidTestImplementation(Depends.espressoCore, {
+        exclude group: 'androidx.annotation', module: 'annotation'
+    })
+    androidTestImplementation Depends.annotations
+
+    testImplementation Depends.junit
+    testImplementation Depends.coreTesting
+    testImplementation Depends.mockito
+}
