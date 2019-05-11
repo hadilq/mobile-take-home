@@ -8,7 +8,7 @@ import com.nhaarman.mockito_kotlin.verify
 import org.junit.Before
 import org.junit.Test
 
-class GetPathImplTest {
+class PathSelectorPageImplTest {
 
     private lateinit var routeRepository: RouteRepository
     private lateinit var aiRepository: AirportRepository
@@ -22,7 +22,7 @@ class GetPathImplTest {
     @Test
     fun checkAirport() {
         // Given
-        val usecase = GetPathImpl(aiRepository, routeRepository)
+        val usecase = PathSelectorPageImpl(aiRepository, routeRepository)
         val iataOrName = "UEI"
 
         // When
@@ -35,7 +35,7 @@ class GetPathImplTest {
     @Test
     fun getShortestPath() {
         // Given
-        val usecase = GetPathImpl(aiRepository, routeRepository)
+        val usecase = PathSelectorPageImpl(aiRepository, routeRepository)
         val origin = Airport("skfv", "dfv", "AKN", "QID", 54.109, 39.30)
         val destination = Airport("ls", "drer", "PAE", "EVN", 52.109, 19.30)
 

@@ -14,4 +14,9 @@ interface AirportDataSource {
      * Returns a stream of airport that their iata is alike to [iata].
      */
     fun findAirportByIata(iata: String): Flowable<Airport>
+
+    /**
+     * Returns a stream of airports with [airports]' IATA.
+     */
+    fun loadAirports(airports: Array<String>): Flowable<Airport>
 }

@@ -1,14 +1,14 @@
-package com.github.hadilq.mobiletakehome.domain.repository
+package com.github.hadilq.mobiletakehome.domain.usecase
 
 import com.github.hadilq.mobiletakehome.domain.entity.Airport
 import io.reactivex.Flowable
 
-interface AirportRepository {
+interface MapPage {
 
     /**
-     * Returns a stream of possible airports with [iataOrName].
+     * Returns a stream to notify when database is ready. True is ready.
      */
-    fun checkAirport(iataOrName: String): Flowable<Airport>
+    fun isDatabaseReady(): Flowable<Boolean>
 
     /**
      * Returns a stream of airports with [airports]' IATA.

@@ -16,4 +16,7 @@ class AirportDataSourceImpl(
 
     override fun findAirportByIata(iata: String): Flowable<Airport> =
         dao.findAirportByIata("%$iata%").map(AirportRow::map)
+
+    override fun loadAirports(airports: Array<String>): Flowable<Airport> =
+        Flowable.fromIterable(airports.asList()).flatMap { dao.loadAirports(it).map(AirportRow::map) }
 }

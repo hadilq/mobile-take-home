@@ -4,7 +4,7 @@ import com.github.hadilq.mobiletakehome.domain.entity.Airport
 import com.github.hadilq.mobiletakehome.domain.entity.Route
 import io.reactivex.Flowable
 
-interface GetPath {
+interface PathSelectorPage {
 
     /**
      * Returns a stream of possible airports with [iataOrName].

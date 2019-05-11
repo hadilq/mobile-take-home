@@ -19,6 +19,9 @@ interface AirportDao {
     @Query("SELECT * FROM airport WHERE iata LIKE :iata")
     fun findAirportByIata(iata: String): Flowable<AirportRow>
 
+    @Query("SELECT * FROM airport WHERE iata = :airportId")
+    fun loadAirports(airportId: String): Flowable<AirportRow>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun save(vararg airport: AirportRow)
 }

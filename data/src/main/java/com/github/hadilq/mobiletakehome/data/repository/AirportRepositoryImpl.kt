@@ -11,4 +11,7 @@ class AirportRepositoryImpl(
 
     override fun checkAirport(iataOrName: String): Flowable<Airport> =
         Flowable.merge(airportSource.findAirportByName(iataOrName), airportSource.findAirportByIata(iataOrName))
+
+    override fun loadAirports(airports: Array<String>): Flowable<Airport> =
+        airportSource.loadAirports(airports)
 }
