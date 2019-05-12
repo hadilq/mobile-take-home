@@ -63,6 +63,11 @@ class PathSelectorActivity : BaseActivity() {
         }
     }
 
+    override fun finish() {
+        super.finish()
+        overridePendingTransition(R.anim.stay, R.anim.slide_down)
+    }
+
     private fun originSuggestion(airports: List<Airport>) = originAdapter.addAirports(airports)
 
     private fun destinationSuggestion(airports: List<Airport>) = destinationAdapter.addAirports(airports)

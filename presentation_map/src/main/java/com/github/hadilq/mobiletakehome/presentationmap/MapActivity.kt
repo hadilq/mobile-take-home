@@ -64,6 +64,7 @@ class MapActivity : BaseActivity() {
                 if (!it) {
                     val intent = intentFactory.create(IntentFactory.Page.PATH_SELECTOR)
                     startActivityForResult(intent, PAGE_SELECTOR_REQUEST_CODE)
+                    overridePendingTransition(R.anim.slide_up, R.anim.stay)
                 }
             }
         }
