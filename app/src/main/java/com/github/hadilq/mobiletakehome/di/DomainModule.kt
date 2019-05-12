@@ -56,6 +56,4 @@ class DomainModule {
         airportRepository: AirportRepository,
         routeRepository: RouteRepository
     ): PathSelectorPage = PathSelectorPageImpl(airportRepository, routeRepository)
-
-
 }
