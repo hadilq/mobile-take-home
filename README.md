@@ -20,6 +20,7 @@ This module is keeping codes and resources of main activity, which we call it ma
 - `presentation_path_selector` module: the same as `presentation_map` module, but holding codes and resources of an 
 Android activity to handle path selection. This Activity could be a fragment in the map activity, but to keep navigation 
 easier and persist pages stack while relaunching the app from recent button of the device, I decided to use an activity here.
+- `presentation_common` module: keep the common components of presentation modules above.
 - `app` module: integrates all classes and assemble the apk file. Mainly the modules and providers of Dagger framework live here.
 
 By applying the DIP, dependency inversion principle, `data`, `presentation_path_selector` and `presentation_map` modules 
