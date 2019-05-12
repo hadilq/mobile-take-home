@@ -4,7 +4,10 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.view.inputmethod.EditorInfo
+import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.ViewModelProvider
+import com.github.hadilq.mobiletakehome.domain.entity.Airport
 import com.github.hadilq.mobiletakehome.domain.entity.Route
 import com.github.hadilq.mobiletakehome.presentationcommon.BaseActivity
 import com.github.hadilq.mobiletakehome.presentationcommon.IntentFactory
@@ -18,8 +21,15 @@ class PathSelectorActivity : BaseActivity() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject
+    lateinit var originAdapter: AirportAutoCompleteAdapter
+    @Inject
+    lateinit var destinationAdapter: AirportAutoCompleteAdapter
 
     private lateinit var viewModel: PathSelectorViewModel
+
+    private var originAirport: Airport? = null
+    private var destinationAirport: Airport? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,6 +39,48 @@ class PathSelectorActivity : BaseActivity() {
         setupAutoCompletes()
 
         viewModel = viewModel(viewModelFactory) {
+            originLiveData.observe(::originSuggestion)
+            destinationLiveData.observe(::destinationSuggestion)
+            routesLiveData.observe(::foundedRoute)
+            notFoundLiveData.observe(::notFoundRoute)
+            cleanOriginLiveData.observe(::clearOriginAdapter)
+            cleanDestinationLiveData.observe(::clearDestinationAdapter)
+            loadingLiveData.observe(::loading)
+        }
+    }
+
+    private fun originSuggestion(airports: List<Airport>) = originAdapter.addAirports(airports)
+
+    private fun destinationSuggestion(airports: List<Airport>) = destinationAdapter.addAirports(airports)
+
+    private fun foundedRoute(routes: List<Route>) {
+        resultView.visible()
+        showView.visible()
+        progressBar.gone()
+        errorView.gone()
+        sendResult(routes)
+    }
+
+    private fun notFoundRoute(@Suppress("UNUSED_PARAMETER") notFound: Boolean) {
+        showView.gone()
+        resultView.gone()
+        progressBar.gone()
+        errorView.visible()
+    }
+
+    private fun clearOriginAdapter(@Suppress("UNUSED_PARAMETER") clear: Boolean) {
+        originAdapter.clear()
+    }
+
+    private fun clearDestinationAdapter(@Suppress("UNUSED_PARAMETER") clear: Boolean) {
+        destinationAdapter.clear()
+    }
+
+    private fun loading(loading: Boolean) {
+        if (loading) {
+            progressBar.visible()
+        } else {
+            progressBar.gone()
         }
     }
 
@@ -58,9 +110,67 @@ class PathSelectorActivity : BaseActivity() {
             }
 
         })
+
+        showView.setOnClickListener { finish() }
     }
 
     private fun setupAutoCompletes() {
+        originView.threshold = 1
+        originView.setAdapter(originAdapter)
+        originView.setDropDownBackgroundResource(android.R.color.transparent)
+        originView.setOnItemClickListener { _, _, position, _ ->
+            originAirport = originAdapter.getItem(position)
+            originAdapter.clear()
+            checkForRoute()
+        }
+        originView.doOnTextChanged { text, _, _, _ ->
+            viewModel.originSuggestions(text.toString().trim())
+            disableResultViews()
+        }
+        originView.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_NEXT) {
+                checkForRoute()
+                true
+            } else {
+                false
+            }
+        }
+
+        destinationView.threshold = 1
+        destinationView.setAdapter(destinationAdapter)
+        destinationView.setDropDownBackgroundResource(android.R.color.transparent)
+        destinationView.setOnItemClickListener { _, _, position, _ ->
+            destinationAirport = destinationAdapter.getItem(position)
+            destinationAdapter.clear()
+            checkForRoute()
+        }
+        destinationView.doOnTextChanged { text, _, _, _ ->
+            viewModel.destinationsSuggestions(text.toString().trim())
+            disableResultViews()
+        }
+        destinationView.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                checkForRoute()
+                true
+            } else {
+                false
+            }
+        }
+    }
+
+    private fun checkForRoute() {
+        originAirport?.let { origin ->
+            destinationAirport?.let { destination ->
+                viewModel.findShortestRoute(origin, destination)
+            } ?: run { disableResultViews() }
+        } ?: run { disableResultViews() }
+    }
+
+    private fun disableResultViews() {
+        showView.gone()
+        resultView.gone()
+        errorView.gone()
+        progressBar.gone()
     }
 
     private fun moving(up: Boolean) {
@@ -73,7 +183,7 @@ class PathSelectorActivity : BaseActivity() {
         }
     }
 
-    fun sendResult(routes: List<Route>) {
+    private fun sendResult(routes: List<Route>) {
         if (routes.isNotEmpty()) {
             setResult(Activity.RESULT_OK, Intent().apply {
                 putExtra(

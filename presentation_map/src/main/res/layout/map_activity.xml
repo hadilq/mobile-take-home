@@ -40,8 +40,6 @@
                 android:layout_height="@dimen/standard_double"
                 android:layout_gravity="center"
                 style="?android:attr/progressBarStyleLarge"
-                android:indeterminateTint="@color/colorPrimary"
-                tools:targetApi="lollipop"
                 />
 
     </FrameLayout>

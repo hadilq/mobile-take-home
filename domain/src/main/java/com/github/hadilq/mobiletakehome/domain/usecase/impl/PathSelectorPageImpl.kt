@@ -16,6 +16,6 @@ class PathSelectorPageImpl(
     override fun checkAirport(iataOrName: String): Flowable<Airport> =
         airportRepository.checkAirport(iataOrName).subscribeOn(Schedulers.io())
 
-    override fun getShortestPath(origin: Airport, destination: Airport): Flowable<Route> =
+    override fun getShortestPath(origin: Airport, destination: Airport): Flowable<List<Route>> =
         routeRepository.findShortestRoutes(origin, destination).subscribeOn(Schedulers.io())
 }

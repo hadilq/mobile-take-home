@@ -10,5 +10,5 @@ interface RouteRepository {
      * Returns a stream of Routes that connects the origin to the destination with the least transfer(ie. it will take
      * the same amount of time to travel between two airports, regardless of the physical distance between them).
      */
-    fun findShortestRoutes(origin: Airport, destination: Airport): Flowable<Route>
+    fun findShortestRoutes(origin: Airport, destination: Airport): Flowable<List<Route>>
 }

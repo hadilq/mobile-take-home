@@ -14,6 +14,7 @@ import java.util.regex.Pattern
 class CsvReaderImpl(
     private val context: Context
 ) : CsvReader {
+
     override fun loadAirlines(): Map<String, AirlineRow> {
         val map = HashMap<String, AirlineRow>()
         load("airlines.csv") {
@@ -53,7 +54,7 @@ class CsvReaderImpl(
             l += RouteRow(
                 airlineId = list[0],
                 originId = list[1],
-                destinationId = list[1]
+                destinationId = list[2]
             )
         }
         return l

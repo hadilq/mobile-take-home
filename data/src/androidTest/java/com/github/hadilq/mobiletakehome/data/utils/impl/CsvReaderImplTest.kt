@@ -4,6 +4,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.InstrumentationRegistry
 import com.github.hadilq.mobiletakehome.data.utils.CsvReader
 import org.junit.Assert.assertFalse
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -36,6 +37,20 @@ class CsvReaderImplTest {
     fun routesAssetLoading() {
         val routes = csvReader.loadRouts()
         assertFalse(routes.isEmpty())
+    }
+
+    @Test
+    fun routesATLtoDEN() {
+        val routes = csvReader.loadRouts()
+
+        assertTrue(routes.any { it.originId == "ATL" && it.destinationId == "DEN" })
+    }
+
+    @Test
+    fun routesBJMtoNBO() {
+        val routes = csvReader.loadRouts()
+
+        assertTrue(routes.any { it.originId == "BJM" && it.destinationId == "NBO" })
     }
 
 }

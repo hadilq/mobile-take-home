@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@android:color/transparent"
+        >
+
+    <TextView
+            android:id="@+id/iataView"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingLeft="@dimen/standard"
+            android:paddingRight="@dimen/standard"
+            android:gravity="right|center_vertical"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+            android:background="@android:color/white"
+            android:textColor="@android:color/darker_gray"
+            android:maxLines="1"
+            android:ellipsize="end"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            />
+
+    <TextView
+            android:id="@+id/nameView"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:paddingLeft="@dimen/standard"
+            android:paddingRight="@dimen/standard"
+            android:gravity="left|center_vertical"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:background="@android:color/white"
+            android:textColor="@android:color/darker_gray"
+            android:maxLines="1"
+            android:ellipsize="end"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@+id/iataView"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            />
+</androidx.constraintlayout.widget.ConstraintLayout>
