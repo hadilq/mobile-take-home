@@ -6,13 +6,11 @@ import android.os.Bundle
 import android.preference.PreferenceManager
 import androidx.lifecycle.ViewModelProvider
 import com.github.hadilq.mobiletakehome.domain.entity.Airport
-import com.github.hadilq.mobiletakehome.presentationcommon.BaseActivity
-import com.github.hadilq.mobiletakehome.presentationcommon.IntentFactory
-import com.github.hadilq.mobiletakehome.presentationcommon.gone
-import com.github.hadilq.mobiletakehome.presentationcommon.visible
+import com.github.hadilq.mobiletakehome.presentationcommon.*
 import kotlinx.android.synthetic.main.map_activity.*
 import org.osmdroid.config.Configuration
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
+import org.osmdroid.views.CustomZoomButtonsController
 import javax.inject.Inject
 
 
@@ -31,9 +29,8 @@ class MapActivity : BaseActivity() {
         Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx))
 
         setContentView(R.layout.map_activity)
-        mapView.setTileSource(TileSourceFactory.MAPNIK)
-        mapView.setBuiltInZoomControls(true)
-        mapView.setMultiTouchControls(true)
+
+        setupMap()
 
         viewModel = viewModel(viewModelFactory) {
             airportsLiveData.observe(::airports)
@@ -43,7 +40,7 @@ class MapActivity : BaseActivity() {
 
         addRouteView.setOnClickListener {
             viewModel.loadingLiveData.value?.let {
-                if (it) {
+                if (!it) {
                     val intent = intentFactory.create(IntentFactory.Page.PATH_SELECTOR)
                     startActivityForResult(intent, PAGE_SELECTOR_REQUEST_CODE)
                 }
@@ -76,6 +73,13 @@ class MapActivity : BaseActivity() {
         }
     }
 
+    private fun setupMap() {
+        mapView.setTileSource(TileSourceFactory.MAPNIK)
+        mapView.setMultiTouchControls(true)
+        mapView.zoomController.setVisibility(CustomZoomButtonsController.Visibility.ALWAYS)
+        mapView.controller.setZoom(3.0)
+    }
+
     private fun airports(airports: List<Airport>) {
 
     }
@@ -83,7 +87,7 @@ class MapActivity : BaseActivity() {
     private fun loading(loading: Boolean) {
         if (loading) {
             progressBar.visible()
-            addRouteView.gone()
+            addRouteView.invisible()
         } else {
             progressBar.gone()
             addRouteView.visible()

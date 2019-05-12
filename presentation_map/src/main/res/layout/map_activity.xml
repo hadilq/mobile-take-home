@@ -21,24 +21,29 @@
     <FrameLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_margin="@dimen/standard"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             >
-
-        <ProgressBar
-                android:id="@+id/progressBar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                style="?android:attr/progressBarStyleLarge"
-                android:indeterminateTint="@color/colorPrimary"
-                tools:targetApi="lollipop"
-                />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/addRouteView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                app:fabSize="normal"
+                android:src="@drawable/ic_plus"
                 />
+
+        <ProgressBar
+                android:id="@+id/progressBar"
+                android:layout_width="@dimen/standard_double"
+                android:layout_height="@dimen/standard_double"
+                android:layout_gravity="center"
+                style="?android:attr/progressBarStyleLarge"
+                android:indeterminateTint="@color/colorPrimary"
+                tools:targetApi="lollipop"
+                />
+
     </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
