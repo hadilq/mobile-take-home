@@ -28,7 +28,7 @@ class RouteRepositoryImplTest {
         repository = RouteRepositoryImpl(datasource)
 
         RxJavaPlugins.reset()
-        RxJavaPlugins.setIoSchedulerHandler { Schedulers.trampoline() }
+        RxJavaPlugins.setComputationSchedulerHandler { Schedulers.trampoline() }
     }
 
     @After
@@ -52,7 +52,7 @@ class RouteRepositoryImplTest {
         test.assertComplete()
         test.assertNoErrors()
         assertTrue(1 == test.valueCount())
-        assertTrue(route == test.values()[0])
+        assertTrue(route == test.values()[0][0])
     }
 
     @Test
@@ -78,8 +78,8 @@ class RouteRepositoryImplTest {
 
         test.assertComplete()
         test.assertNoErrors()
-        assertTrue(2 == test.valueCount())
-        assertTrue(r1 == test.values()[0])
-        assertTrue(r2 == test.values()[1])
+        assertTrue(1 == test.valueCount())
+        assertTrue(r1 == test.values()[0][0])
+        assertTrue(r2 == test.values()[0][1])
     }
 }

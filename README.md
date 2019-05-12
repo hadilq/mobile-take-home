@@ -24,3 +24,10 @@ easier and persist pages stack while relaunching the app from recent button of t
 
 By applying the DIP, dependency inversion principle, `data`, `presentation_path_selector` and `presentation_map` modules 
 depends on the `domain` module as the heart of the app. Also, the `app` module have to depend on every other modules.
+
+Running tests
+---
+To run all tests, launch the emulator(I used API 28) and run
+```bash
+./gradlew clean check connectedCheck
+```
