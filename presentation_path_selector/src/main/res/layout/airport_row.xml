@@ -5,7 +5,7 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:background="@android:color/transparent"
+        android:background="@color/colorAccent"
         >
 
     <TextView
@@ -16,8 +16,7 @@
             android:paddingRight="@dimen/standard"
             android:gravity="right|center_vertical"
             android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-            android:background="@android:color/white"
-            android:textColor="@android:color/darker_gray"
+            android:textColor="@android:color/white"
             android:maxLines="1"
             android:ellipsize="end"
             app:layout_constraintRight_toRightOf="parent"
@@ -34,8 +33,7 @@
             android:paddingRight="@dimen/standard"
             android:gravity="left|center_vertical"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-            android:background="@android:color/white"
-            android:textColor="@android:color/darker_gray"
+            android:textColor="@android:color/white"
             android:maxLines="1"
             android:ellipsize="end"
             app:layout_constraintLeft_toLeftOf="parent"
