@@ -58,6 +58,8 @@ abstract class AppDatabase : RoomDatabase() {
             contextRef?.let {
                 it.get()?.let { context ->
                     buildDatabase(context, executor)
+                } ?: let {
+                    throw IllegalStateException("Context must be available")
                 }
             } ?: let {
                 throw IllegalStateException("Context must be available")

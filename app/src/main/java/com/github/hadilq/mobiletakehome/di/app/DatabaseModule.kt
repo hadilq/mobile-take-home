@@ -36,9 +36,9 @@ class DatabaseModule {
     @Singleton
     @Provides
     fun provideDatabase(app: Application, csvReader: CsvReader): AppDatabase {
-        AppDatabase.setContext(app)
         AppDatabase.csvReader = csvReader
         AppDatabase.executor = Executors.newSingleThreadExecutor()
+        AppDatabase.setContext(app)
         return AppDatabase.sInstance
     }
 

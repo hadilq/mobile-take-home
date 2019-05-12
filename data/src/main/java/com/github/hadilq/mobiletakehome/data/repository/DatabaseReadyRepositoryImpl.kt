@@ -8,5 +8,9 @@ class DatabaseReadyRepositoryImpl(
     private val database: AppDatabase
 ) : DatabaseReadyRepository {
 
-    override fun isDatabaseReady(): Flowable<Boolean> = database.isDatabaseCreated()
+    override fun isDatabaseReady(): Flowable<Boolean> =
+        database.isDatabaseCreated().doOnSubscribe {
+            // Trigger Database creation
+            database.airlineDao().all().subscribe()
+        }
 }
