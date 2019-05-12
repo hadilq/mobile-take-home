@@ -14,6 +14,6 @@ class MapPageImpl(
 
     override fun isDatabaseReady(): Flowable<Boolean> = readyRepository.isDatabaseReady().subscribeOn(Schedulers.io())
 
-    override fun loadAirports(airports: Array<String>): Flowable<Airport> =
+    override fun loadAirports(airports: Array<String>): Flowable<List<Airport>> =
         airportRepository.loadAirports(airports).subscribeOn(Schedulers.io())
 }

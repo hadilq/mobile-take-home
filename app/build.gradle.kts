@@ -53,6 +53,7 @@ dependencies {
     implementation(Depends.rxJava)
     implementation(Depends.room)
     implementation(Depends.roomRuntime)
+    implementation(Depends.osmdroid)
 
     testImplementation(Depends.junit)
 

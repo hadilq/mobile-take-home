@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import android.view.inputmethod.EditorInfo
 import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.ViewModelProvider
 import com.github.hadilq.mobiletakehome.domain.entity.Airport
@@ -28,9 +27,6 @@ class PathSelectorActivity : BaseActivity() {
 
     private lateinit var viewModel: PathSelectorViewModel
 
-    private var originAirport: Airport? = null
-    private var destinationAirport: Airport? = null
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.path_selector_activity)
@@ -46,6 +42,8 @@ class PathSelectorActivity : BaseActivity() {
             cleanOriginLiveData.observe(::clearOriginAdapter)
             cleanDestinationLiveData.observe(::clearDestinationAdapter)
             loadingLiveData.observe(::loading)
+            originAirportLiveData.observe { checkForRoute() }
+            destinationAirportLiveData.observe { checkForRoute() }
         }
     }
 
@@ -53,12 +51,11 @@ class PathSelectorActivity : BaseActivity() {
 
     private fun destinationSuggestion(airports: List<Airport>) = destinationAdapter.addAirports(airports)
 
-    private fun foundedRoute(routes: List<Route>) {
+    private fun foundedRoute(@Suppress("UNUSED_PARAMETER") routes: List<Route>) {
         resultView.visible()
         showView.visible()
         progressBar.gone()
         errorView.gone()
-        sendResult(routes)
     }
 
     private fun notFoundRoute(@Suppress("UNUSED_PARAMETER") notFound: Boolean) {
@@ -111,7 +108,12 @@ class PathSelectorActivity : BaseActivity() {
 
         })
 
-        showView.setOnClickListener { finish() }
+        showView.setOnClickListener {
+            viewModel.routesLiveData.value?.let {
+                sendResult(it)
+                finish()
+            }
+        }
     }
 
     private fun setupAutoCompletes() {
@@ -119,48 +121,30 @@ class PathSelectorActivity : BaseActivity() {
         originView.setAdapter(originAdapter)
         originView.setDropDownBackgroundResource(android.R.color.transparent)
         originView.setOnItemClickListener { _, _, position, _ ->
-            originAirport = originAdapter.getItem(position)
+            viewModel.keepOriginAirport(originAdapter.getItem(position))
             originAdapter.clear()
-            checkForRoute()
         }
         originView.doOnTextChanged { text, _, _, _ ->
             viewModel.originSuggestions(text.toString().trim())
             disableResultViews()
-        }
-        originView.setOnEditorActionListener { _, actionId, _ ->
-            if (actionId == EditorInfo.IME_ACTION_NEXT) {
-                checkForRoute()
-                true
-            } else {
-                false
-            }
         }
 
         destinationView.threshold = 1
         destinationView.setAdapter(destinationAdapter)
         destinationView.setDropDownBackgroundResource(android.R.color.transparent)
         destinationView.setOnItemClickListener { _, _, position, _ ->
-            destinationAirport = destinationAdapter.getItem(position)
+            viewModel.keepDestinationAirport(destinationAdapter.getItem(position))
             destinationAdapter.clear()
-            checkForRoute()
         }
         destinationView.doOnTextChanged { text, _, _, _ ->
             viewModel.destinationsSuggestions(text.toString().trim())
             disableResultViews()
         }
-        destinationView.setOnEditorActionListener { _, actionId, _ ->
-            if (actionId == EditorInfo.IME_ACTION_DONE) {
-                checkForRoute()
-                true
-            } else {
-                false
-            }
-        }
     }
 
     private fun checkForRoute() {
-        originAirport?.let { origin ->
-            destinationAirport?.let { destination ->
+        viewModel.originAirportLiveData.value?.let { origin ->
+            viewModel.destinationAirportLiveData.value?.let { destination ->
                 viewModel.findShortestRoute(origin, destination)
             } ?: run { disableResultViews() }
         } ?: run { disableResultViews() }

@@ -33,7 +33,7 @@ class RouteRepositoryImpl(
             return Flowable.empty()
         }
         val source =
-            routeSource.findAllRoutesFromOrigin(origin.iata).toFlowable().flatMap { Flowable.fromIterable(it) }.share()
+            routeSource.findAllRoutesFromOrigin(origin.iata).share()
         return Flowable.merge(
             source
                 .filter { it.destination.iata == destination.iata }

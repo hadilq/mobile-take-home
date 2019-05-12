@@ -3,6 +3,7 @@ package com.github.hadilq.mobiletakehome.presentationmap
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
 import android.preference.PreferenceManager
 import androidx.lifecycle.ViewModelProvider
 import com.github.hadilq.mobiletakehome.domain.entity.Airport
@@ -10,7 +11,10 @@ import com.github.hadilq.mobiletakehome.presentationcommon.*
 import kotlinx.android.synthetic.main.map_activity.*
 import org.osmdroid.config.Configuration
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
+import org.osmdroid.util.BoundingBox
+import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.CustomZoomButtonsController
+import org.osmdroid.views.overlay.Polyline
 import javax.inject.Inject
 
 
@@ -35,6 +39,7 @@ class MapActivity : BaseActivity() {
         viewModel = viewModel(viewModelFactory) {
             airportsLiveData.observe(::airports)
             loadingLiveData.observe(::loading)
+            polylineLiveData.observe(::addPolyline)
             checkDatabase()
         }
 
@@ -81,7 +86,38 @@ class MapActivity : BaseActivity() {
     }
 
     private fun airports(airports: List<Airport>) {
+        viewModel.polylineLiveData.value?.let { mapView.overlayManager.remove(it) }
+        val line = airports.map {
+            GeoPoint(it.latitude, it.longitude)
+        }
+        val polyline = Polyline().apply { setPoints(line) }
+        viewModel.keepLine(polyline)
+        Handler().post { zoomToLine(line) }
+    }
 
+    private fun addPolyline(polyline: Polyline) {
+        mapView.overlayManager.add(polyline)
+    }
+
+    private fun zoomToLine(line: List<GeoPoint>) {
+        var minLat = Double.MAX_VALUE
+        var maxLat = Double.MIN_VALUE
+        var minLong = Double.MAX_VALUE
+        var maxLong = Double.MIN_VALUE
+
+        line.forEach { point ->
+            if (point.latitude < minLat)
+                minLat = point.latitude
+            if (point.latitude > maxLat)
+                maxLat = point.latitude
+            if (point.longitude < minLong)
+                minLong = point.longitude
+            if (point.longitude > maxLong)
+                maxLong = point.longitude
+        }
+
+        val boundingBox = BoundingBox(maxLat, maxLong, minLat, minLong)
+        mapView.zoomToBoundingBox(boundingBox.increaseByScale(1.3f), true)
     }
 
     private fun loading(loading: Boolean) {

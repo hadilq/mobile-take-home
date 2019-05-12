@@ -9,6 +9,7 @@ import com.github.hadilq.mobiletakehome.domain.usecase.PathSelectorPage
 import com.github.hadilq.mobiletakehome.presentationcommon.BaseViewModel
 import io.reactivex.processors.PublishProcessor
 import java.util.concurrent.TimeUnit
+import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
 
 class PathSelectorViewModel @Inject constructor(
@@ -29,6 +30,12 @@ class PathSelectorViewModel @Inject constructor(
         liveData.value = ArrayList()
         liveData
     }
+    private val _originAirportLiveData by lazy {
+        MutableLiveData<Airport>()
+    }
+    private val _destinationAirportLiveData by lazy {
+        MutableLiveData<Airport>()
+    }
     private val _routesLiveData by lazy {
         MutableLiveData<List<Route>>()
     }
@@ -47,11 +54,15 @@ class PathSelectorViewModel @Inject constructor(
 
     val originLiveData: LiveData<out List<Airport>> = _originLiveData
     val destinationLiveData: LiveData<out List<Airport>> = _destinationLiveData
+    val originAirportLiveData: LiveData<Airport> = _originAirportLiveData
+    val destinationAirportLiveData: LiveData<Airport> = _destinationAirportLiveData
     val routesLiveData: LiveData<List<Route>> = _routesLiveData
     val notFoundLiveData: LiveData<Boolean> = _notFoundLiveData
     val cleanOriginLiveData: LiveData<Boolean> = _clearOriginLiveData
     val cleanDestinationLiveData: LiveData<Boolean> = _clearDestinationLiveData
     val loadingLiveData: LiveData<Boolean> = _loadingLiveData
+
+    private val foundRoute = AtomicBoolean(false)
 
     init {
         originStream
@@ -81,15 +92,16 @@ class PathSelectorViewModel @Inject constructor(
 
         routeStream
             .switchMap {
-                _routesLiveData.value = null
+                foundRoute.set(false)
                 _loadingLiveData.postValue(true)
                 pathSelector.getShortestPath(it.first, it.second)
                     .doOnComplete {
                         _loadingLiveData.postValue(false)
-                        if (_routesLiveData.value == null) _notFoundLiveData.postValue(true)
+                        if (!foundRoute.get()) _notFoundLiveData.postValue(true)
                     }
             }
             .subscribe({ result ->
+                foundRoute.set(true)
                 _loadingLiveData.postValue(false)
                 _routesLiveData.postValue(result)
             }, { t: Throwable? -> Log.w("PathSelectorViewModel", "Failed to get routes search results", t) }).track()
@@ -105,6 +117,14 @@ class PathSelectorViewModel @Inject constructor(
 
     fun findShortestRoute(originAirport: Airport, destinationAirport: Airport) {
         routeStream.onNext(Pair(originAirport, destinationAirport))
+    }
+
+    fun keepOriginAirport(airport: Airport?) {
+        _originAirportLiveData.value = airport
+    }
+
+    fun keepDestinationAirport(airport: Airport?) {
+        _destinationAirportLiveData.value = airport
     }
 
 }

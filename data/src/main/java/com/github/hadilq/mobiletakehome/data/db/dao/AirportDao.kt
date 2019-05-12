@@ -6,6 +6,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.github.hadilq.mobiletakehome.data.db.table.AirportRow
 import io.reactivex.Flowable
+import io.reactivex.Maybe
 
 @Dao
 interface AirportDao {
@@ -20,7 +21,7 @@ interface AirportDao {
     fun findAirportByIata(iata: String): Flowable<AirportRow>
 
     @Query("SELECT * FROM airport WHERE iata = :airportId")
-    fun loadAirports(airportId: String): Flowable<AirportRow>
+    fun loadAirports(airportId: String): Maybe<AirportRow>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun save(vararg airport: AirportRow)

@@ -18,5 +18,5 @@ interface AirportDataSource {
     /**
      * Returns a stream of airports with [airports]' IATA.
      */
-    fun loadAirports(airports: Array<String>): Flowable<Airport>
+    fun loadAirports(airports: Array<String>): Flowable<List<Airport>>
 }
